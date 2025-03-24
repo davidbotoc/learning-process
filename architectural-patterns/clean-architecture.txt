@@ -1,0 +1,97 @@
+            Client / User                           |              Client / User 
+                                                    |
+                  \/                                |                    \/
+    	---------------------                       |           ---------------------                   ---------------------               ---------------------
+        |                   |                       |           |                   |                   |                   |               |                   |
+        |                   |                       |           |                   |                   |                   |               |                   |
+        |   Presentation    | API                   |           |    Presentation   | ~API              |   Infrastructure  | ~DAL  ->      |      Database     |
+        |                   |                       |           |                   |                   |                   |               |                   |
+        |                   |                       |           |                   |                   |                   |               |                   |
+        ---------------------                       |           ---------------------                   ---------------------               ---------------------
+                                                    |
+                  \/                                |                    \/                                       \/
+                                                    |
+        ---------------------                       |           -------------------------------------------------------------
+        |                   |                       |           |                                                           |
+        |                   |                       |           |       ---------------------------------------------       |
+        |  Business Logic   | BLL                   |           |       |                                           |       |
+        |                   |                       |           |       |                                           |       |
+        |                   |                       |           |       |                 Application               |       |
+        ---------------------                       |           |       |                                           |       |
+                                                    |           |       |                                           |       |
+                  \/                                |           |       ---------------------------------------------       |
+                                                    |           |                                                           |
+        ---------------------                       |           |                             \/                            | ~BLL
+        |                   |                       |           |                                                           |
+        |                   |                       |           |       ---------------------------------------------       |
+        | Data Access Layer | DAL                   |           |       |                                           |       |
+        |                   |                       |           |       |                                           |       |
+        |                   |                       |           |       |                   Domain                  |       |
+        ---------------------                       |           |       |                                           |       |
+                                                    |           |       |                                           |       |
+                  \/                                |           |       ---------------------------------------------       |
+                                                    |           |                                                           |
+        ---------------------                       |           -------------------------------------------------------------
+        |                   |                       |
+        |                   |                       |
+        |      Database     |                       |
+        |                   |                       |
+        |                   |                       |
+        ---------------------                       |
+                                                    |
+        n-tier architecture                         |           clean architecture - domain-centered application or domain-driven app
+
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    Clean architecture - business logic > core of the application
+                       - dependencies > from 'outer layer' to 'inner layer' > outer layers depend on inner layers 
+
+        Domain - stores core business models > classes / entities / models / enums
+               - do not mess up this layer with any custom logic
+
+        Application (Use Cases) (App-specific rules)
+               - store the logic
+               - logic should be abstract > interfaces as much as possible
+               - DTOs, mappers, handlers, validators
+               - it defines WHAT the does, NOT HOW it does it
+
+        Infrastructure - here things are really start moving
+                       - implement interfaces from Application layer > where the HOW is implemented
+                       - DBContext, Repositories
+
+        Presentation - Controllers, Startup Configuration
+
+    Key Principles of Clean Architecture: 
+        1. Domain Layer as the Core
+            - The inner layers contain pure business logic and rules
+            - No dependencies on external frameworks
+        2. Dependency Rule
+            - Dependencies flow inward (outer depends on inner)
+            - e.g. the database(outer layer) must adapt to the domain(inner layer)
+        3. Decoupled Layers
+            - Domain Layer: Pure business logic(entities, domain models)
+            - Application Layer: Use cases (orchestrates domain logic)
+            - Infrastructure Layer: implements interfaces defined by the domain(e.g. database, APIs)
+            - Presentation Layer: UI or API endpoints
+
+    Why it's domain-centered:
+        1. Business Logic is Isolated: The domain layer doesn’t know about databases, HTTP, or frameworks.
+        2. Testability: Domain logic can be tested without external dependencies.
+        3. Flexibility: Swap databases or UIs without changing domain rules.
+
+    When to use clean architecture: 
+        1. Complex business domains (banking, healthcare)
+        2. Long-term projects WHERE MAINTAINABILITY MATTERS.
+
+    C#
+        WebAppSolution.sln
+            - Domain (Domain Layer - Class library)
+            - Application (App Layer - Class library)
+            - Infrastructure (Infrastructure Layer - Class library) (DBContext)
+            - Presentation (Presentation Layer - ASP.NET Core Web API Project) (Controllers, Startup Configuration)
+        
+        Microservices (folder)
+            - TA > ASP.NET Core Web API Project with folders! A folder for each layer!
+            - Inventory > ASP.NET Core Web API Project with folders! A folder for each layer!
+        Gateway (ASP.NET Core Web API Project)
+        
